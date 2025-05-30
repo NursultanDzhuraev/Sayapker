@@ -27,9 +27,11 @@ public class User implements UserDetails {
     private String password;
     private String phoneNumber;
     private String imageUrl;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-
+    @OneToMany(mappedBy = "user")
+    private List<Horse> horses;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

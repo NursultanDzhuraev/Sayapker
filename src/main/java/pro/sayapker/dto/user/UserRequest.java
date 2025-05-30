@@ -1,10 +1,11 @@
-package pro.sayapker.dto.authentication;
+package pro.sayapker.dto.user;
+
 
 import jakarta.validation.constraints.NotBlank;
 import pro.sayapker.validation.email.ValidEmail;
 import pro.sayapker.validation.password.ValidPassword;
 
-public record UserSignUpRequest(
+public record UserRequest(
         @NotBlank(message = "Имя не должно быть пустым")
         String firstName,
         @NotBlank(message = "Email обязателен")
@@ -17,5 +18,4 @@ public record UserSignUpRequest(
         String phoneNumber,
         String imageUrl
 ) {
-
 }

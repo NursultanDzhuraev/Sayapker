@@ -1,6 +1,6 @@
 package pro.sayapker.config;
 
-
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,13 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pro.sayapker.entity.User;
-
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
 
     @Override
@@ -27,6 +25,12 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getServletPath();
+
+        if (path.startsWith("/api/auth/google")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header != null && header.startsWith("Bearer ")) {
@@ -42,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     );
                 }
             } catch (Exception e) {
-                throw new ServletException(e);
+                throw new JWTDecodeException("Invalid JWT token: " + e.getMessage());
             }
         }
         filterChain.doFilter(request, response);

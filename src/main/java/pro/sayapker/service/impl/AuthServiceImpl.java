@@ -11,7 +11,6 @@ import pro.sayapker.entity.User;
 import pro.sayapker.enums.Role;
 import pro.sayapker.exception.BadRequestException;
 import pro.sayapker.exception.IllegalArgumentException;
-import pro.sayapker.exception.NotFoundException;
 import pro.sayapker.repository.UserRepo;
 import pro.sayapker.service.AuthService;
 
@@ -24,7 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     @Override
     public AuthResponse singIn(SignInRequest signInRequest) {
-        User user = userRepo.findByEmail(signInRequest.email()).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        User user = userRepo.findByEmailOrElseThrow(signInRequest.email());
         if(!passwordEncoder.matches(signInRequest.password(), user.getPassword())) {
             throw new IllegalArgumentException("Wrong password");
         }

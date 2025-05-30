@@ -15,7 +15,6 @@ import pro.sayapker.repository.UserRepo;
 import java.time.Instant;
 
 
-@Component
 @Service
 @RequiredArgsConstructor
 public class JwtService {

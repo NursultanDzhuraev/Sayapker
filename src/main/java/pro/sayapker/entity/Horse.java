@@ -22,6 +22,7 @@ public class Horse {
     private Long id;
     private String name;
     private Date birthDate;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String breed;
     private String homeland;
@@ -32,4 +33,7 @@ public class Horse {
     private Map<String,String> ancestors;
     private Status status;
     private String reasonOfRejection;
+
+    @ManyToOne
+    private User user;
 }
