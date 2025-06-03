@@ -5,6 +5,7 @@ import pro.sayapker.dto.SimpleResponse;
 import pro.sayapker.dto.horse.HorseRequest;
 import pro.sayapker.dto.horse.HorseResponse;
 import pro.sayapker.dto.horse.HorseResponseApplication;
+import pro.sayapker.dto.horse.ReasonOfRejectionBookItemRequest;
 
 public interface HorseService {
     SimpleResponse saveHors(HorseRequest horseRequest);
@@ -12,4 +13,8 @@ public interface HorseService {
     PaginationResponse<HorseResponseApplication> findAllHorseApplications(int pageNumber, int pageSize);
 
     PaginationResponse<HorseResponse> findAllHorse(int pageNumber, int pageSize);
+
+    SimpleResponse acceptHorseFromApplication(Long horseId);
+
+    SimpleResponse rejectHorseFromApplication(Long horseId, ReasonOfRejectionBookItemRequest reason);
 }

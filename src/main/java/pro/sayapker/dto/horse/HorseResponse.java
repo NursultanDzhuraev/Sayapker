@@ -11,6 +11,7 @@ public record HorseResponse(
         String ownerImage,
         String ownerName,
         Date dataOfBirthday,
-        String image
+        String image,
+        int countLike
 ) {
 }

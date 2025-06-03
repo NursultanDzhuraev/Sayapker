@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pro.sayapker.dto.PaginationResponse;
@@ -12,11 +13,13 @@ import pro.sayapker.dto.SimpleResponse;
 import pro.sayapker.dto.horse.HorseRequest;
 import pro.sayapker.dto.horse.HorseResponse;
 import pro.sayapker.dto.horse.HorseResponseApplication;
+import pro.sayapker.dto.horse.ReasonOfRejectionBookItemRequest;
 import pro.sayapker.entity.Horse;
 import pro.sayapker.entity.User;
 import pro.sayapker.enums.Status;
 import pro.sayapker.repository.HorseRepo;
 import pro.sayapker.repository.UserRepo;
+import pro.sayapker.repository.jdbcClient.HorseJDBC;
 import pro.sayapker.service.HorseService;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.List;
 public class HorseServiceImpl implements HorseService {
 private final HorseRepo horseRepo;
 private final UserRepo userRepo;
+private final HorseJDBC horseJDBC;
     @Override
     public SimpleResponse saveHors(HorseRequest horseRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -65,7 +69,30 @@ private final UserRepo userRepo;
 
     @Override
     public PaginationResponse<HorseResponse> findAllHorse(int pageNumber, int pageSize) {
+      return horseJDBC.findAllHorse(pageNumber,pageSize);
+    }
 
+    @Override
+    public SimpleResponse acceptHorseFromApplication(Long horseId) {
+        Horse horse = horseRepo.findByIdHorse(horseId);
+        horse.setStatus(Status.ACCEPTED);
+        horseRepo.save(horse);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.ACCEPTED)
+                .message("Успешно принятая horse")
+                .build();
+    }
+
+    @Override
+    public SimpleResponse rejectHorseFromApplication(Long horseId, ReasonOfRejectionBookItemRequest reason) {
+        Horse horse = horseRepo.findByIdHorse(horseId);
+        horse.setStatus(Status.REJECTED);
+        horse.setReasonOfRejection(reason.getReason());
+        horseRepo.save(horse);
+      return SimpleResponse.builder()
+              .httpStatus(HttpStatus.ACCEPTED)
+              .message("Успешно отклонена horse")
+              .build();
     }
 
     private HorseResponseApplication getHorseResponseApplication(Horse horse) {
@@ -84,5 +111,4 @@ private final UserRepo userRepo;
     private List<HorseResponseApplication> getList(List<Horse> horseList) {
        return horseList.stream().map(this::getHorseResponseApplication).toList();
     }
-
 }
