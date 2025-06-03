@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import pro.sayapker.dto.PaginationResponse;
 import pro.sayapker.dto.SimpleResponse;
 import pro.sayapker.dto.user.UserRequest;
 import pro.sayapker.dto.user.UserResponse;
@@ -21,12 +22,11 @@ public class UserApi {
     @Secured("ADMIN")
     @Operation(summary = "Получить users ", description = "Только админ может получить")
     @GetMapping("/findAllUsers")
-    public List<UserResponse> findAllUsers(
+    public PaginationResponse<UserResponse> findAllUsers(
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "12") int pageSize) {
         return userService.findAllUsers(pageNumber, pageSize);
     }
-
     @Secured("ADMIN")
     @Operation(summary = "Удалить user", description = "Только администратор может удалить user")
     @DeleteMapping("/deleteUserById/{userId}")

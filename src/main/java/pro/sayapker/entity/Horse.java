@@ -7,6 +7,7 @@ import lombok.Setter;
 import pro.sayapker.enums.Gender;
 import pro.sayapker.enums.Status;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,11 @@ public class Horse {
     private Map<String,String> ancestors;
     private Status status;
     private String reasonOfRejection;
+    private LocalDate registrationDate;
 
     @ManyToOne
     private User user;
+    @OneToMany(mappedBy = "horse")
+    private List<Like> likes;
+
 }

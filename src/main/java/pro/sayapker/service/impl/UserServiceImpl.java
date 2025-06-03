@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pro.sayapker.config.JwtService;
+import pro.sayapker.dto.PaginationResponse;
 import pro.sayapker.dto.SimpleResponse;
 import pro.sayapker.dto.authentication.AuthResponse;
 import pro.sayapker.dto.user.UserRequest;
@@ -19,8 +20,7 @@ import pro.sayapker.exception.BadRequestException;
 import pro.sayapker.exception.NotFoundException;
 import pro.sayapker.repository.UserRepo;
 import pro.sayapker.service.UserService;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,16 +29,16 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     @Override
-    public List<UserResponse> findAllUsers(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    public PaginationResponse<UserResponse> findAllUsers(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<User> users = userRepo.findAllUsers(pageable);
-        return users.getContent().stream().map(user -> new UserResponse(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPhoneNumber()
-        )).collect(Collectors.toList());
+        var response = new PaginationResponse<UserResponse>();
+        response.setPageNumber(pageNumber+1);
+        response.setPageSize(pageSize);
+        response.setTotalElements(users.getTotalElements());
+        response.setTotalPages(users.getTotalPages());
+        response.setContent(UserResponse.entityToDtoList(users.getContent()));
+        return response;
     }
     @Override
     public SimpleResponse deleteUserById(Long userId) {
