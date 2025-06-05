@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import pro.sayapker.entity.Horse;
 
 public interface HorseRepo extends JpaRepository<Horse, Long> {
-    @Query(value = """
-        select h from Horse h where h.status = 'PENDING'
-        """,nativeQuery=true)
+    @Query(value = "select h.* from horses h where h.status = 'PENDING'", nativeQuery = true)
     Page<Horse> findAllHorse(Pageable pageable);
-    @Query("select h from Horse h where h.id = :horseId and h.status = 'PENDING'")
+    @Query(value = "select h.* from horses h where h.id = :horseId and h.status = 'PENDING'",nativeQuery = true)
     Horse findByIdHorse(Long horseId);
+    @Query(value = "select h.* from horses h where h.id = :horseId and h.status = 'ACCEPTED'",nativeQuery = true)
+    Horse findHorseById(Long horseId);
 }

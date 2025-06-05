@@ -17,7 +17,7 @@ public interface UserService {
 
     UserResponse findUserByHorseId(Long horseId);
 
-
+    UserResponse findByIdUser(Long userId);
 }
 
 

@@ -98,4 +98,10 @@ public class UserServiceImpl implements UserService {
                .phoneNumber(user.getPhoneNumber())
                .build();
     }
+
+    @Override
+    public UserResponse findByIdUser(Long userId) {
+        User user = userRepo.findByIdlOrElseThrow(userId);
+        return UserResponse.dtoToEntity(user);
+    }
 }

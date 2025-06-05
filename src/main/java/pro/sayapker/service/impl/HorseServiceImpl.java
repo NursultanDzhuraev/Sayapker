@@ -5,15 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pro.sayapker.dto.PaginationResponse;
 import pro.sayapker.dto.SimpleResponse;
-import pro.sayapker.dto.horse.HorseRequest;
-import pro.sayapker.dto.horse.HorseResponse;
-import pro.sayapker.dto.horse.HorseResponseApplication;
-import pro.sayapker.dto.horse.ReasonOfRejectionBookItemRequest;
+import pro.sayapker.dto.horse.*;
 import pro.sayapker.entity.Horse;
 import pro.sayapker.entity.User;
 import pro.sayapker.enums.Status;
@@ -93,6 +89,51 @@ private final HorseJDBC horseJDBC;
               .httpStatus(HttpStatus.ACCEPTED)
               .message("Успешно отклонена horse")
               .build();
+    }
+
+    @Override
+    public SimpleResponse updateHorse(Long horseId, HorseRequest horseRequest) {
+        Horse horse = horseRepo.findHorseById(horseId);
+        horse.setName(horseRequest.getName());
+        horse.setStatus(Status.PENDING);
+        horse.setBreed(horseRequest.getBreed());
+        horse.setGender(horseRequest.getGender());
+        horse.setAncestors(horseRequest.getAncestors());
+        horse.setHomeland(horseRequest.getHomeland());
+        horse.setInformation(horseRequest.getInformation());
+        horse.setBirthDate(horseRequest.getBirthDate());
+        horse.setImages(horseRequest.getImages());
+        horseRepo.save(horse);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Успешно редактировано horse")
+                .build();
+    }
+
+    @Override
+    public HorseByIdResponse findByIdHorse(Long horseId) {
+        Horse horse = horseRepo.findHorseById(horseId);
+        User user = horse.getUser();
+        return HorseByIdResponse.builder()
+                .horseName(horse.getName())
+                .horseId(horse.getId())
+                .images(horse.getImages())
+                .phoneNumber(user.getPhoneNumber())
+                .ownerName(user.getFirstName() + " " + user.getLastName())
+                .dataOfBirthday(horse.getBirthDate())
+                .horseId(horse.getId())
+                .ownerImage(user.getImageUrl())
+                .build();
+    }
+
+    @Override
+    public SimpleResponse deletedHorseById(Long horseId) {
+        Horse horse = horseRepo.findHorseById(horseId);
+        horseRepo.delete(horse);
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message("Успешно удалено")
+                .build();
     }
 
     private HorseResponseApplication getHorseResponseApplication(Horse horse) {

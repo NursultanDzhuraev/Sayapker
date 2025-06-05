@@ -19,10 +19,11 @@ import java.util.Map;
 @Table(name = "horses")
 public class Horse {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "horse_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "horse_gen", sequenceName = "horse_seq", allocationSize = 1, initialValue = 100)
     private Long id;
     private String name;
-    private Date birthDate;
+    private LocalDate birthDate;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String breed;
@@ -32,6 +33,7 @@ public class Horse {
     private String information;
     @ElementCollection
     private Map<String,String> ancestors;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private String reasonOfRejection;
     private LocalDate registrationDate;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import pro.sayapker.enums.Gender;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class HorseRequest {
 
     @NotNull(message = "поле birthDate не должен быть пустым")
     @PastOrPresent(message = "дата рождения не может быть в будущем")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @NotNull(message = "поле gender не должен быть пустым")
     @Pattern(regexp = "MALE|FEMALE", message = "поле gender должно быть MALE или FEMALE")

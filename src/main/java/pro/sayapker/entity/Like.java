@@ -14,7 +14,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Like {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "likes_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "likes_gen", sequenceName = "likes_seq", allocationSize = 1, initialValue = 100)
     private Long id;
     @ManyToOne
     private User user;

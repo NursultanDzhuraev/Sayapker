@@ -39,9 +39,14 @@ public class UserApi {
     public ResponseEntity<?> updatedUser(@RequestBody UserRequest userRequest){
         return userService.updatedUser(userRequest);
     }
+
     @Operation(summary = "Получить user")
-    @PostMapping("/findUserByHorseId/{horseId}")
+    @GetMapping("/findUserByHorseId/{horseId}")
     public UserResponse findUserByHorseId(@PathVariable Long horseId) {
         return userService.findUserByHorseId(horseId);
+    }
+    @GetMapping("/findById/{userId}")
+    public UserResponse findUserById(@PathVariable Long userId) {
+        return userService.findByIdUser(userId);
     }
 }

@@ -3,15 +3,15 @@ package pro.sayapker.dto.horse;
 import lombok.Builder;
 
 import java.time.LocalDate;
-import java.util.Date;
-
+import java.util.List;
 @Builder
-public record HorseResponseApplication(
+public record HorseByIdResponse(
         Long horseId,
         String horseName,
         String ownerImage,
         String ownerName,
         LocalDate dataOfBirthday,
-        String image
-) {
+        List<String> images,
+        String phoneNumber
+        ) {
 }

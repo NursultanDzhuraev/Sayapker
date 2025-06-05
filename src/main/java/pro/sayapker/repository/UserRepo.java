@@ -19,9 +19,10 @@ public interface UserRepo extends JpaRepository<User, Long> {
     }
    @Query("select u from User u where u.role = 'USER'")
     Page<User> findAllUsers(Pageable pageable);
+
     @Query(value = """
-select u from User u 
-join Horse h on u.id = h.user_id
+select u.* from users u
+                  join horses h on u.id = h.user_id
 where h.id = :horseId
 """, nativeQuery = true)
     User findUserByHorseId(@Param("horseId") Long horseId);

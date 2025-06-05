@@ -15,6 +15,7 @@ public record UserResponse(
 ) {
     public static UserResponse dtoToEntity(User user) {
         return   UserResponse.builder()
+                .userId(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .phoneNumber(user.getPhoneNumber())

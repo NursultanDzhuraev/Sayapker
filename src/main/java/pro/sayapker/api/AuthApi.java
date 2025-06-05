@@ -21,13 +21,13 @@ public class AuthApi {
     private final AuthService authService;
 
     @Operation(summary = "Вход", description = "Позволяет пользователю войти в систему")
-    @PostMapping("/signIn")
-    public AuthResponse signIn(@RequestBody @Valid SignInRequest signInRequest) {
+    @PostMapping("/singIn")
+    public AuthResponse singIn(@RequestBody @Valid SignInRequest signInRequest) {
         return  authService.singIn(signInRequest);
     }
     @Operation(summary = "Регистрация клиента", description = "Регистрация нового клиента")
-    @PostMapping("/signUpForClient")
-    public ResponseEntity<AuthResponse> signUpForClient(@RequestBody @Valid UserSignUpRequest userSignUpRequest) {
+    @PostMapping("/singUpForClient")
+    public ResponseEntity<AuthResponse> singUpForClient(@RequestBody @Valid UserSignUpRequest userSignUpRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUpForClient(userSignUpRequest));
     }
 }

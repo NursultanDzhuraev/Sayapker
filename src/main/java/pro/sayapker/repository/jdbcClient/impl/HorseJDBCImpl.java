@@ -30,7 +30,9 @@ public class HorseJDBCImpl implements HorseJDBC {
                 where h.status = 'ACCEPTED'
                 limit ? offset ?
                 """;
-        List<HorseResponse> responseList = jdbcClient.sql(findAllHorses).param(pageNumber).param(offset).query((rs, rsnNum) ->
+        List<HorseResponse> responseList = jdbcClient.sql(findAllHorses)
+                .param(pageSize)
+                .param(offset).query((rs, rsnNum) ->
                 HorseResponse.builder()
                         .horseId(rs.getLong("horseId"))
                         .horseName(rs.getString("horseName"))
