@@ -2,6 +2,7 @@ package pro.sayapker.dto.horse;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -11,6 +12,7 @@ public record HorseResponseApplication(
         String horseName,
         String ownerImage,
         String ownerName,
+        BigDecimal price,
         LocalDate dataOfBirthday,
         String image
 ) {

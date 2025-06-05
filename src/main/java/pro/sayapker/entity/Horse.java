@@ -7,8 +7,8 @@ import lombok.Setter;
 import pro.sayapker.enums.Gender;
 import pro.sayapker.enums.Status;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +30,7 @@ public class Horse {
     private String homeland;
     @ElementCollection
     private List<String> images;
+    private BigDecimal price;
     private String information;
     @ElementCollection
     private Map<String,String> ancestors;

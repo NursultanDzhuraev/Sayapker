@@ -16,21 +16,21 @@ VALUES
      '$2a$12$xqTWUHKcL/Ag4D8cDnsx9.rGGztEy93z3zT604gekjXb6K3MhJpHG', '+996700333444',
      'http://example.com/images/aigul.jpg', 'USER');
 
-INSERT INTO horses (id, name, birth_date, gender, breed, homeland, information, status, reason_of_rejection, registration_date, user_id)
+INSERT INTO horses (id, name, birth_date, gender, breed, homeland,price, information, status, reason_of_rejection, registration_date, user_id)
 VALUES
-    (1, 'Ак Шумкар', '2018-05-10', 'MALE', 'Кыргыз Аты','Кыргызстан',
+    (1, 'Ак Шумкар', '2018-05-10', 'MALE', 'Кыргыз Аты','Кыргызстан',200.0,
      'Чистокровный кыргызский жорго, быстрый и выносливый.', 'ACCEPTED', NULL,
      '2025-01-15', 1),
-    (2, 'Кара Жорго', '2019-03-22', 'MALE', 'Ахалтекинская', 'Туркменистан',
+    (2, 'Кара Жорго', '2019-03-22', 'MALE', 'Ахалтекинская', 'Туркменистан',300.0,
       'Элегантный и грациозный конь.',  'PENDING', NULL, '2025-02-01',
      2),
-    (3, 'Сырга', '2020-07-12', 'FEMALE', 'Кыргыз Аты', 'Кыргызстан',
+    (3, 'Сырга', '2020-07-12', 'FEMALE', 'Кыргыз Аты', 'Кыргызстан',400.0,
       'Спокойная и дружелюбная кобыла.',  'REJECTED', 'Недостаточно документов',
      '2025-03-10', 3),
-    (4, 'Буран', '2017-11-05', 'MALE', 'Орловский рысак', 'Россия',
+    (4, 'Буран', '2017-11-05', 'MALE', 'Орловский рысак', 'Россия',500.0,
      'Сильный и выносливый конь для скачек.', 'ACCEPTED', NULL,
      '2025-04-01', 4),
-    (5, 'Жылдыз', '2021-01-30', 'FEMALE', 'Арабская', 'ОАЭ',
+    (5, 'Жылдыз', '2021-01-30', 'FEMALE', 'Арабская', 'ОАЭ',600.0,
      'Идеальна для длительных прогулок.', 'ACCEPTED', NULL, '2025-04-20', 5);
 
 INSERT INTO likes (id, user_id, horse_id)

@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import pro.sayapker.enums.Gender;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 @Getter
@@ -29,6 +29,9 @@ public class HorseRequest {
 
     @Size(min = 2, max = 200, message = "длина homeland должна быть от 2 до 200 символов")
     private String homeland;
+    @NotNull(message = "поле price не должен быт пустым")
+    @Size(min =1, message = "price не должно отрицательным")
+    private BigDecimal price;
 
     @NotNull(message = "список изображений не должен быть пустым")
     @Size(min = 1, max = 10, message = "список изображений должен содержать от 1 до 10 элементов")

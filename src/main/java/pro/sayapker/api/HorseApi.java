@@ -66,4 +66,14 @@ public class HorseApi {
     public SimpleResponse deletedById(@PathVariable Long horseId){
         return horseService.deletedHorseById(horseId);
     }
+
+    @Operation(summary = " Фильтрация и сортировка horse по параметрам",
+            description = "получить  всех horse по параметрам")
+    @PostMapping("/getAllBookForClient")
+    public PaginationResponse<HorseResponse> getAllBookForClient(
+            @RequestBody ClientRequest clientRequest,
+            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(defaultValue = "16") int pageSize){
+        return horseService.getAllBookForClient(clientRequest,pageNumber,pageSize);
+    }
 }

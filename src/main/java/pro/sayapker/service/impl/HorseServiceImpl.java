@@ -13,19 +13,22 @@ import pro.sayapker.dto.horse.*;
 import pro.sayapker.entity.Horse;
 import pro.sayapker.entity.User;
 import pro.sayapker.enums.Status;
+import pro.sayapker.exception.NotFoundException;
 import pro.sayapker.repository.HorseRepo;
 import pro.sayapker.repository.UserRepo;
 import pro.sayapker.repository.jdbcClient.HorseJDBC;
 import pro.sayapker.service.HorseService;
+
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class HorseServiceImpl implements HorseService {
-private final HorseRepo horseRepo;
-private final UserRepo userRepo;
-private final HorseJDBC horseJDBC;
+    private final HorseRepo horseRepo;
+    private final UserRepo userRepo;
+    private final HorseJDBC horseJDBC;
+
     @Override
     public SimpleResponse saveHors(HorseRequest horseRequest) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -35,6 +38,7 @@ private final HorseJDBC horseJDBC;
         horse.setStatus(Status.PENDING);
         horse.setUser(user);
         horse.setRegistrationDate(LocalDate.now());
+        horse.setPrice(horseRequest.getPrice());
         horse.setBreed(horseRequest.getBreed());
         horse.setGender(horseRequest.getGender());
         horse.setAncestors(horseRequest.getAncestors());
@@ -52,10 +56,10 @@ private final HorseJDBC horseJDBC;
 
     @Override
     public PaginationResponse<HorseResponseApplication> findAllHorseApplications(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         Page<Horse> horsePage = horseRepo.findAllHorse(pageable);
         var response = new PaginationResponse<HorseResponseApplication>();
-        response.setPageNumber(pageNumber+1);
+        response.setPageNumber(pageNumber + 1);
         response.setPageSize(pageSize);
         response.setTotalElements(horsePage.getTotalElements());
         response.setTotalPages(horsePage.getTotalPages());
@@ -65,7 +69,7 @@ private final HorseJDBC horseJDBC;
 
     @Override
     public PaginationResponse<HorseResponse> findAllHorse(int pageNumber, int pageSize) {
-      return horseJDBC.findAllHorse(pageNumber,pageSize);
+        return horseJDBC.findAllHorse(pageNumber, pageSize);
     }
 
     @Override
@@ -85,10 +89,10 @@ private final HorseJDBC horseJDBC;
         horse.setStatus(Status.REJECTED);
         horse.setReasonOfRejection(reason.getReason());
         horseRepo.save(horse);
-      return SimpleResponse.builder()
-              .httpStatus(HttpStatus.ACCEPTED)
-              .message("Успешно отклонена horse")
-              .build();
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.ACCEPTED)
+                .message("Успешно отклонена horse")
+                .build();
     }
 
     @Override
@@ -98,6 +102,7 @@ private final HorseJDBC horseJDBC;
         horse.setStatus(Status.PENDING);
         horse.setBreed(horseRequest.getBreed());
         horse.setGender(horseRequest.getGender());
+        horse.setPrice(horseRequest.getPrice());
         horse.setAncestors(horseRequest.getAncestors());
         horse.setHomeland(horseRequest.getHomeland());
         horse.setInformation(horseRequest.getInformation());
@@ -122,13 +127,20 @@ private final HorseJDBC horseJDBC;
                 .ownerName(user.getFirstName() + " " + user.getLastName())
                 .dataOfBirthday(horse.getBirthDate())
                 .horseId(horse.getId())
+                .price(horse.getPrice())
+                .price(horse.getPrice())
                 .ownerImage(user.getImageUrl())
                 .build();
     }
 
     @Override
     public SimpleResponse deletedHorseById(Long horseId) {
-        Horse horse = horseRepo.findHorseById(horseId);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepo.findByEmailOrElseThrow(email);
+        Horse horse = horseRepo.findHorseIdAndUserId(horseId, user.getId());
+        if (horse == null) {
+            throw new NotFoundException("Не найден horse");
+        }
         horseRepo.delete(horse);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
@@ -136,20 +148,30 @@ private final HorseJDBC horseJDBC;
                 .build();
     }
 
+    @Override
+    public PaginationResponse<HorseResponse> getAllBookForClient(ClientRequest clientRequest, int pageNumber, int pageSize) {
+        if (clientRequest.getStartPrice() > clientRequest.getEndPrice()) {
+            throw new IllegalStateException("startPrice не может быть больше endPrice");
+        }
+        return horseJDBC.getAllBookForClient(clientRequest,pageNumber,pageSize);
+    }
+
     private HorseResponseApplication getHorseResponseApplication(Horse horse) {
         User user = horse.getUser();
         User user1 = userRepo.findByIdlOrElseThrow(user.getId());
         List<String> images = horse.getImages();
-      return   HorseResponseApplication.builder()
+        return HorseResponseApplication.builder()
                 .horseId(horse.getId())
                 .horseName(horse.getName())
                 .ownerName(user1.getUsername())
+                .price(horse.getPrice())
                 .ownerImage(user1.getImageUrl())
                 .dataOfBirthday(horse.getBirthDate())
                 .image(images.get(0))
                 .build();
     }
+
     private List<HorseResponseApplication> getList(List<Horse> horseList) {
-       return horseList.stream().map(this::getHorseResponseApplication).toList();
+        return horseList.stream().map(this::getHorseResponseApplication).toList();
     }
 }

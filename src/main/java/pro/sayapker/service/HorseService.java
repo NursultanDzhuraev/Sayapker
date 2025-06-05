@@ -20,4 +20,7 @@ public interface HorseService {
     HorseByIdResponse findByIdHorse(Long horseId);
 
     SimpleResponse deletedHorseById(Long horseId);
+
+    PaginationResponse<HorseResponse> getAllBookForClient(ClientRequest clientRequest, int pageNumber, int pageSize);
+
 }

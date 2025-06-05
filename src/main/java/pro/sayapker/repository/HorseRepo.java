@@ -13,4 +13,7 @@ public interface HorseRepo extends JpaRepository<Horse, Long> {
     Horse findByIdHorse(Long horseId);
     @Query(value = "select h.* from horses h where h.id = :horseId and h.status = 'ACCEPTED'",nativeQuery = true)
     Horse findHorseById(Long horseId);
+    @Query(value = "select h.* from horses h where h.id = :horseId and h.status = 'ACCEPTED' and h.user_id = :userId",
+            nativeQuery = true)
+    Horse findHorseIdAndUserId(Long horseId, Long userId);
 }
