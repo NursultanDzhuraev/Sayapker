@@ -12,4 +12,6 @@ public interface AuthService {
     AuthResponse verifyOtpAndSignUp(@Valid VerifyRequest request);
 
     ResponseEntity<String> sendOtpToEmail(@Valid EmailRequest request);
+
+    String generateSecureOtp(int length);
 }

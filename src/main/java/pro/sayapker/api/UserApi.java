@@ -1,12 +1,14 @@
 package pro.sayapker.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import pro.sayapker.dto.PaginationResponse;
 import pro.sayapker.dto.SimpleResponse;
+import pro.sayapker.dto.authentication.VerifyRequest;
 import pro.sayapker.dto.user.UserRequest;
 import pro.sayapker.dto.user.UserResponse;
 import pro.sayapker.service.UserService;
@@ -48,5 +50,9 @@ public class UserApi {
     @GetMapping("/findById/{userId}")
     public UserResponse findUserById(@PathVariable Long userId) {
         return userService.findByIdUser(userId);
+    }
+    @PutMapping("/verifyOtpForEmailChange")
+    public ResponseEntity<?> verifyOtpForEmailChange(@RequestBody @Valid VerifyRequest request){
+        return userService.verifyOtpForEmailChange(request);
     }
 }

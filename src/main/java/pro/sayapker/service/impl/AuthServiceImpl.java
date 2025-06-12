@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<String> sendOtpToEmail(EmailRequest request) {
         String otp = generateSecureOtp(6);
         String email = request.getEmail();
-        User user = userRepo.findByEmailOrElseThrow(email);
+        User user = userRepo.findByEmail(email).orElse(null);
         if(user !=null){
             throw new AlreadyExistsException(email+"мурунтан эле катталган");
         }
@@ -116,7 +116,7 @@ public class AuthServiceImpl implements AuthService {
         return ResponseEntity.status(HttpStatus.OK).body("OTP жөнөтүлдү: " + email);
     }
 
-    private boolean validateOtp(String email, String inputOtp) {
+   private boolean validateOtp(String email, String inputOtp) {
         if (!otpStore.containsKey(email)) return false;
         OtpData data = otpStore.get(email);
         if (LocalDateTime.now().isAfter(data.getExpiryTime())) {
@@ -128,11 +128,12 @@ public class AuthServiceImpl implements AuthService {
         if (isValid) otpStore.remove(email);
         return isValid;
     }
-    private void saveOtp(String email, String otp) {
+    public void saveOtp(String email, String otp) {
         LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(EXPIRE_MINUTES);
         otpStore.put(email, new OtpData(otp, expiryTime));
     }
-    private String generateSecureOtp(int length) {
+    @Override
+    public String generateSecureOtp(int length) {
         SecureRandom secureRandom = new SecureRandom();
         String digits = "0123456789";
         StringBuilder otp = new StringBuilder();
@@ -144,14 +145,15 @@ public class AuthServiceImpl implements AuthService {
 
         return otp.toString();
     }
-    @Scheduled(fixedRate = 60_000)
+
+    @Scheduled(fixedRate = 600_000)
     public void cleanupExpiredOtps() {
         LocalDateTime now = LocalDateTime.now();
 
         otpStore.entrySet().removeIf(entry -> now.isAfter(entry.getValue().getExpiryTime()));
         emailStore.keySet().removeIf(email -> !otpStore.containsKey(email));
     }
-    private static class OtpData {
+    static class OtpData {
         private final String otp;
         private final LocalDateTime expiryTime;
 
