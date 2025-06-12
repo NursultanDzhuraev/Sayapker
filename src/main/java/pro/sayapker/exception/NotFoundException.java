@@ -1,4 +1,4 @@
-package pro.sayapker.exception;
+package ebook.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

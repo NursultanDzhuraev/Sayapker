@@ -1,4 +1,4 @@
-package pro.sayapker.exception;
+package ebook.exceptions;
 
 public class BadRequestException extends RuntimeException{
     public BadRequestException(String message) {
