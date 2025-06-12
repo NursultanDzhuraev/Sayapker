@@ -5,7 +5,6 @@ import pro.sayapker.enums.Role;
 @Builder
 public record AuthResponse(
         Long id,
-        String firstName,
         String email,
         String token,
         Role role

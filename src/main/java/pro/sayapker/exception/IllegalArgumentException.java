@@ -1,4 +1,4 @@
-package ebook.exceptions;
+package pro.sayapker.exception;
 
 public class IllegalArgumentException extends RuntimeException {
     public IllegalArgumentException(String message) {

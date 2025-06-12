@@ -19,6 +19,7 @@ import pro.sayapker.entity.User;
 import pro.sayapker.exception.BadRequestException;
 import pro.sayapker.exception.NotFoundException;
 import pro.sayapker.repository.UserRepo;
+import pro.sayapker.repository.jdbcClient.UserJDBC;
 import pro.sayapker.service.UserService;
 
 
@@ -26,6 +27,7 @@ import pro.sayapker.service.UserService;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
+    private final UserJDBC userJDBC;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     @Override
@@ -43,11 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SimpleResponse deleteUserById(Long userId) {
         User user = userRepo.findByIdlOrElseThrow(userId);
-        userRepo.delete(user);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Успешна уделена")
-                .build();
+       return userJDBC.deleteUser(user.getId());
     }
     @Override
     public ResponseEntity<?> updatedUser(UserRequest userRequest) {
@@ -81,7 +79,6 @@ public class UserServiceImpl implements UserService {
                     .token(token)
                     .email(user.getEmail())
                     .role(user.getRole())
-                    .firstName(user.getFirstName())
                     .build());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ошибка в обновления");

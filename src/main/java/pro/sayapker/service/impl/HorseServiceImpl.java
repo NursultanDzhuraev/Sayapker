@@ -11,10 +11,12 @@ import pro.sayapker.dto.PaginationResponse;
 import pro.sayapker.dto.SimpleResponse;
 import pro.sayapker.dto.horse.*;
 import pro.sayapker.entity.Horse;
+import pro.sayapker.entity.Like;
 import pro.sayapker.entity.User;
 import pro.sayapker.enums.Status;
 import pro.sayapker.exception.NotFoundException;
 import pro.sayapker.repository.HorseRepo;
+import pro.sayapker.repository.LikesRepo;
 import pro.sayapker.repository.UserRepo;
 import pro.sayapker.repository.jdbcClient.HorseJDBC;
 import pro.sayapker.service.HorseService;
@@ -28,6 +30,7 @@ public class HorseServiceImpl implements HorseService {
     private final HorseRepo horseRepo;
     private final UserRepo userRepo;
     private final HorseJDBC horseJDBC;
+    private LikesRepo likesRepo;
 
     @Override
     public SimpleResponse saveHors(HorseRequest horseRequest) {
@@ -38,7 +41,6 @@ public class HorseServiceImpl implements HorseService {
         horse.setStatus(Status.PENDING);
         horse.setUser(user);
         horse.setRegistrationDate(LocalDate.now());
-        horse.setPrice(horseRequest.getPrice());
         horse.setBreed(horseRequest.getBreed());
         horse.setGender(horseRequest.getGender());
         horse.setAncestors(horseRequest.getAncestors());
@@ -47,6 +49,7 @@ public class HorseServiceImpl implements HorseService {
         horse.setBirthDate(horseRequest.getBirthDate());
         horse.setImages(horseRequest.getImages());
         horse.setBirthDate(horseRequest.getBirthDate());
+        horse.setPrice(horseRequest.getPrice());
         horseRepo.save(horse);
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.CREATED)
@@ -75,6 +78,7 @@ public class HorseServiceImpl implements HorseService {
     @Override
     public SimpleResponse acceptHorseFromApplication(Long horseId) {
         Horse horse = horseRepo.findByIdHorse(horseId);
+        if(horse == null) {throw new NotFoundException("horse not found or status not PENDING");}
         horse.setStatus(Status.ACCEPTED);
         horseRepo.save(horse);
         return SimpleResponse.builder()
@@ -86,6 +90,7 @@ public class HorseServiceImpl implements HorseService {
     @Override
     public SimpleResponse rejectHorseFromApplication(Long horseId, ReasonOfRejectionBookItemRequest reason) {
         Horse horse = horseRepo.findByIdHorse(horseId);
+        if(horse == null) {throw new NotFoundException("horse not found or status not PENDING");}
         horse.setStatus(Status.REJECTED);
         horse.setReasonOfRejection(reason.getReason());
         horseRepo.save(horse);
@@ -97,7 +102,10 @@ public class HorseServiceImpl implements HorseService {
 
     @Override
     public SimpleResponse updateHorse(Long horseId, HorseRequest horseRequest) {
-        Horse horse = horseRepo.findHorseById(horseId);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepo.findByEmailOrElseThrow(email);
+        Horse horse = horseRepo.findHorseIdAndUserId(horseId,user.getId());
+        if(horse==null) {throw new NotFoundException("horse not found or status not ACCEPTED");}
         horse.setName(horseRequest.getName());
         horse.setStatus(Status.PENDING);
         horse.setBreed(horseRequest.getBreed());
@@ -141,11 +149,7 @@ public class HorseServiceImpl implements HorseService {
         if (horse == null) {
             throw new NotFoundException("Не найден horse");
         }
-        horseRepo.delete(horse);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Успешно удалено")
-                .build();
+       return horseJDBC.deleteHorseById(horse.getId());
     }
 
     @Override

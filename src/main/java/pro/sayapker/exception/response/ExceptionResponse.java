@@ -1,4 +1,4 @@
-package ebook.exceptions.response;
+package pro.sayapker.exception.response;
 
 import lombok.Builder;
 import org.springframework.http.HttpStatus;

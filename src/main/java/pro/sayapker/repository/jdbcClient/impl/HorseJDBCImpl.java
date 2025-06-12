@@ -1,10 +1,12 @@
 package pro.sayapker.repository.jdbcClient.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import pro.sayapker.dto.PaginationResponse;
+import pro.sayapker.dto.SimpleResponse;
 import pro.sayapker.dto.horse.ClientRequest;
 import pro.sayapker.dto.horse.HorseResponse;
 import pro.sayapker.repository.jdbcClient.HorseJDBC;
@@ -171,6 +173,29 @@ public class HorseJDBCImpl implements HorseJDBC {
                 .pageSize(pageSize)
                 .totalElements(totalElements)
                 .totalPages(totalPages)
+                .build();
+    }
+
+    @Override
+    public SimpleResponse deleteHorseById(Long horseId) {
+        String deleteLikesSql = "DELETE FROM likes l WHERE l.horse_id = ?";
+        jdbcClient.sql(deleteLikesSql).param(horseId).update();
+        String deleteAncestorsSql = "DELETE FROM horse_ancestors a WHERE a.horse_id = ?";
+        jdbcClient.sql(deleteAncestorsSql).param(horseId).update();
+        String deleteImagesSql = "DELETE FROM horse_images a WHERE a.horse_id = ?";
+        jdbcClient.sql(deleteImagesSql).param(horseId).update();
+
+        String sql = "DELETE FROM horses h WHERE h.id = ?";
+        int i = jdbcClient.sql(sql).param(horseId).update();
+        if (i > 0) {
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .message("succesfully deleted")
+                    .build();
+        }
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.NOT_FOUND)
+                .message("not deleted")
                 .build();
     }
 }

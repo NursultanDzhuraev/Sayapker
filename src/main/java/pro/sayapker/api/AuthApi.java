@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pro.sayapker.dto.authentication.AuthResponse;
-import pro.sayapker.dto.authentication.SignInRequest;
-import pro.sayapker.dto.authentication.UserSignUpRequest;
+import pro.sayapker.dto.authentication.*;
 import pro.sayapker.service.AuthService;
 
 @RestController
@@ -25,9 +23,20 @@ public class AuthApi {
     public AuthResponse singIn(@RequestBody @Valid SignInRequest signInRequest) {
         return  authService.singIn(signInRequest);
     }
+
+    @PostMapping("/sendOtp")
+    public ResponseEntity<String> sendOtp(@RequestBody @Valid EmailRequest request) {
+      return   authService.sendOtpToEmail(request);
+    }
+
+    @PostMapping("/verifyAndSignUp")
+    public AuthResponse verifyOtpAndSignUp(@RequestBody @Valid VerifyRequest request) {
+        return authService.verifyOtpAndSignUp(request);
+    }
+
     @Operation(summary = "Регистрация клиента", description = "Регистрация нового клиента")
     @PostMapping("/singUpForClient")
-    public ResponseEntity<AuthResponse> singUpForClient(@RequestBody @Valid UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<AuthResponse> singUpForClient(@RequestBody @Valid UserSingRequest userSignUpRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUpForClient(userSignUpRequest));
     }
 }

@@ -1,4 +1,4 @@
-package ebook.exceptions;
+package pro.sayapker.exception;
 
 public class AlreadyExistsException extends RuntimeException {
     public AlreadyExistsException() {

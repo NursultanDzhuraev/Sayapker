@@ -1,4 +1,4 @@
-package ebook.exceptions;
+package pro.sayapker.exception;
 
 public class ForBiddenException extends RuntimeException {
     public ForBiddenException() {

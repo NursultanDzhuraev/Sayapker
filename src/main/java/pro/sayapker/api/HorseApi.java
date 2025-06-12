@@ -62,6 +62,7 @@ public class HorseApi {
     public HorseByIdResponse findByIdHorse(@PathVariable Long horseId){
         return horseService.findByIdHorse(horseId);
     }
+
     @DeleteMapping("/deletedById/{horseId}")
     public SimpleResponse deletedById(@PathVariable Long horseId){
         return horseService.deletedHorseById(horseId);

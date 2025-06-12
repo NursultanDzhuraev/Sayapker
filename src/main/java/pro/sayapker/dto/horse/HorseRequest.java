@@ -29,6 +29,7 @@ public class HorseRequest {
 
     @Size(min = 2, max = 200, message = "длина homeland должна быть от 2 до 200 символов")
     private String homeland;
+
     @NotNull(message = "поле price не должен быт пустым")
     @Size(min =1, message = "price не должно отрицательным")
     private BigDecimal price;

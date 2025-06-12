@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import pro.sayapker.entity.Horse;
 
 public interface HorseRepo extends JpaRepository<Horse, Long> {
@@ -15,5 +16,7 @@ public interface HorseRepo extends JpaRepository<Horse, Long> {
     Horse findHorseById(Long horseId);
     @Query(value = "select h.* from horses h where h.id = :horseId and h.status = 'ACCEPTED' and h.user_id = :userId",
             nativeQuery = true)
-    Horse findHorseIdAndUserId(Long horseId, Long userId);
+    Horse findHorseIdAndUserId(@Param("horseId")Long horseId,@Param("userId") Long userId);
+
+
 }
