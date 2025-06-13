@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    image: sayapker-16
+    image: "#image"
     container_name: ebook-b16-ev
     restart: always
     ports:
@@ -11,8 +11,8 @@ services:
       SPRING_PROFILES_ACTIVE: main
       SERVER_PORT: 2024
       POSTGRES_DB:  jdbc:postgresql://database:5432/postgres
-      POSTGRES_USER: java16user
-      POSTGRES_PASSWORD: java16pass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nusr123
   database:
     image: postgres:15
     restart: always
@@ -20,8 +20,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: java16user
-      POSTGRES_PASSWORD: java16pass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: nusr123
     volumes:
       - db_data:/var/lib/postgresql/data
 volumes:
