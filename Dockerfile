@@ -5,8 +5,8 @@ RUN microdnf install findutils
 RUN chmod +x gradlew
 RUN ./gradlew build -x test
 
-FROM openjdk:17-slim
+FROM openjdk:21-slim
 WORKDIR /app
 COPY --from=build /app/build/libs/Sayapker-0.0.1-SNAPSHOT.jar .
 CMD ["java", "-jar", "Sayapker-0.0.1-SNAPSHOT.jar"]
-EXPOSE 9097
+EXPOSE 2024
