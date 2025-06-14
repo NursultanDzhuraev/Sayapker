@@ -12,7 +12,7 @@ services:
       SERVER_PORT: 2024
       POSTGRES_DB:  jdbc:postgresql://database:5432/postgres
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: nusr123
+      POSTGRES_PASSWORD: nurs123
   database:
     image: postgres:15
     restart: always
@@ -21,7 +21,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: nusr123
+      POSTGRES_PASSWORD: nurs123
     volumes:
       - db_data:/var/lib/postgresql/data
 volumes:
